@@ -13,6 +13,8 @@ interface LoanApplication {
   loanAmount?: number;
   tenure?: number;
   totalRepayment?: number;
+  amountPaid?: number;
+  outstanding?: number;
   status: LoanStatus;
   rejectionReason?: string;
 }
@@ -106,11 +108,20 @@ export default function ApplyPage() {
             <h2 className="text-base font-semibold text-gray-700 mb-3">Your Loan Applications</h2>
             <div className="space-y-2">
               {myLoans.map(l => (
-                <div key={l._id} className="flex flex-wrap justify-between items-center text-sm bg-gray-50 rounded-lg px-4 py-3 gap-2">
-                  <span className="text-gray-600">₹{l.loanAmount?.toLocaleString() ?? '—'}</span>
-                  <span className="text-gray-400">{l.tenure ? `${l.tenure} days` : '—'}</span>
-                  <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase ${statusColor[l.status]}`}>{l.status}</span>
-                  {l.rejectionReason && <span className="text-xs text-red-400">{l.rejectionReason}</span>}
+                <div key={l._id} className="bg-gray-50 rounded-lg px-4 py-3 text-sm space-y-2">
+                  <div className="flex flex-wrap justify-between items-center gap-2">
+                    <span className="text-gray-600 font-medium">₹{l.loanAmount?.toLocaleString() ?? '—'}</span>
+                    <span className="text-gray-400">{l.tenure ? `${l.tenure} days` : '—'}</span>
+                    <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase ${statusColor[l.status]}`}>{l.status}</span>
+                  </div>
+                  {(l.status === 'disbursed' || l.status === 'closed') && l.totalRepayment !== undefined && (
+                    <div className="grid grid-cols-3 gap-2 text-xs pt-1 border-t border-gray-200">
+                      <div><p className="text-gray-400">Total Due</p><p className="font-medium text-gray-700">₹{l.totalRepayment.toLocaleString()}</p></div>
+                      <div><p className="text-gray-400">Paid</p><p className="font-medium text-green-600">₹{(l.amountPaid ?? 0).toLocaleString()}</p></div>
+                      <div><p className="text-gray-400">Outstanding</p><p className="font-medium text-orange-600">₹{(l.outstanding ?? l.totalRepayment).toLocaleString()}</p></div>
+                    </div>
+                  )}
+                  {l.rejectionReason && <p className="text-xs text-red-400">Reason: {l.rejectionReason}</p>}
                 </div>
               ))}
             </div>
