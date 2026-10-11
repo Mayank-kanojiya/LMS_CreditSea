@@ -2,11 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import path from 'path';
 
 import authRoutes from './routes/auth';
 import loanRoutes from './routes/loans';
 import dashboardRoutes from './routes/dashboard';
+import { UPLOADS_DIR } from './utils/uploads';
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ app.use('/api', (_req, res, next) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   next();
 });
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/loans', loanRoutes);

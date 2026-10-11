@@ -5,3 +5,6 @@ dist/
 *.pdb
 src/uploads/*
 !src/uploads/.gitkeep
+/backend/src/uploads/*
+!/backend/src/uploads/.gitkeep
+/frontend/AGENTS.md
